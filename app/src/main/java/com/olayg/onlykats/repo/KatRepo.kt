@@ -6,7 +6,6 @@ import com.olayg.onlykats.repo.remote.RetrofitInstance
 import com.olayg.onlykats.util.ApiState
 import kotlinx.coroutines.flow.flow
 
-// TODO: 9/11/21 Update breeds method to fetch from katService and return correct API state
 // TODO: 9/11/21 Update query map to all possible multiple queries
 object KatRepo {
     private const val TAG = "KAT-REPO"
@@ -69,6 +68,8 @@ object KatRepo {
     private val Queries.asQueryMap: Map<String, Any>
         get() = listOfNotNull(
             "limit" to limit,
+//            category?.let { "category_ids" to it.id.toString() },
+//            breed?.let { "breed_id" to it.id.toString() },
             page?.let { "page" to it }
         ).toMap()
 }

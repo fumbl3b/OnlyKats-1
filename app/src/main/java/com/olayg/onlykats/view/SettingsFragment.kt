@@ -20,7 +20,6 @@ import com.olayg.onlykats.viewmodel.KatViewModel
 /**
  * A simple [Fragment] subclass.
  */
-// TODO: 9/11/21 Navigate back on apply click
 // TODO: 9/10/21 Use toggle method to show or hide unique views for Images (Try using Group in ConstraintLayout)
 // TODO: 9/10/21 Use toggle method to show or hide unique views for Breeds
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
@@ -89,9 +88,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    private fun toggleImagesView(show: Boolean) = with(binding) {}
+    private fun toggleImagesView(show: Boolean) = with(binding) {
 
-    private fun toggleBreedsView(show: Boolean) = with(binding) {}
+    }
+
+    private fun toggleBreedsView(show: Boolean) = with(binding) {
+
+    }
 
     private fun toggleApply() {
         binding.btnApply.isVisible = validateQuery()
