@@ -7,6 +7,10 @@
     android:padding="8dp"
     tools:context="com.olayg.onlykats.view.SettingsFragment">
 
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label_endpoint"
         android:layout_width="wrap_content"
