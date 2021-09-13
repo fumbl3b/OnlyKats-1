@@ -26,6 +26,12 @@ class KatAdapter(
 
     override fun getItemCount() = katList.size
 
+    fun clear() {
+        val listSize = katList.size
+        katList.clear()
+        notifyItemRangeRemoved(0, listSize)
+    }
+
     fun updateList(kats: List<Kat>) {
         if (kats.lastOrNull() != katList.lastOrNull()) {
             val positionStart = katList.size
