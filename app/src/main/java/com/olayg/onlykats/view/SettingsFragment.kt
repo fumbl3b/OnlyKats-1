@@ -89,7 +89,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun toggleImagesView(show: Boolean) = with(binding) {
-
+        imagesEndpointGroup.visibility = if (show) View.VISIBLE
+        else View.GONE
     }
 
     private fun toggleBreedsView(show: Boolean) = with(binding) {
