@@ -20,7 +20,7 @@ class BreedAdapter(
         BreedViewHolder.getInstance(parent)
 
     override fun onBindViewHolder(holder: BreedViewHolder, position: Int) {
-        holder.loadBreed(breedList[position], position + 1)
+        holder.loadBreed(breedList[position])
     }
 
     override fun getItemCount(): Int {
@@ -45,8 +45,8 @@ class BreedAdapter(
         private val binding: ItemBreedBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun loadBreed(breed: Breed, position: Int) = with(binding) {
-            tvBreed.text = "${position}. ${breed.name}"
+        fun loadBreed(breed: Breed) = with(binding) {
+            tvBreedName.text = "${breed.name}"
             breed.image?.url?.let { ivBreedImage.loadWithGlide(it) }
         }
 

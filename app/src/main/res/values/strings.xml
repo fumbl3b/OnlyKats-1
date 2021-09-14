@@ -9,4 +9,5 @@
     <string name="search_parameters">Search Parameters:</string>
     <string name="image_category">Image Category</string>
     <string name="choose_breed">Choose Breed</string>
+    <string name="learn_more"><![CDATA[Learn More >]]></string>
 </resources>

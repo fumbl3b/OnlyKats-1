@@ -54,7 +54,6 @@ class BrowseFragment : Fragment() {
 
     // with(receiver) is 1 of 5 scope functions
     private fun initViews() = with(binding) {
-
         rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(-1) && dy < 0) {
@@ -95,6 +94,8 @@ class BrowseFragment : Fragment() {
         Log.d(TAG, "ApiState.Success: $kats")
         if (adapter == null) adapter = katAdapter
         breedAdapter.clear()
+        visibility = View.VISIBLE
+        binding.rvBreedList.visibility = View.GONE
         katAdapter.updateList(kats)
     }
 
@@ -102,6 +103,8 @@ class BrowseFragment : Fragment() {
         Log.d(TAG, "loadBreeds: $breeds")
         if (adapter == null) adapter = breedAdapter
         katAdapter.clear()
+        visibility = View.VISIBLE
+        binding.rvList.visibility = View.GONE
         breedAdapter.updateList(breeds)
     }
 

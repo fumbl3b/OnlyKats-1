@@ -1,32 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/breed_card_iew"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     android:background="#DCD9D9"
-    android:layout_margin="24dp"
-    app:cardCornerRadius="3dp"
+    android:elevation="50dp"
+    android:paddingHorizontal="16dp"
+    app:cardCornerRadius="10dp"
     app:cornerFamily="rounded">
 
     <LinearLayout
+        android:id="@+id/layout_breed_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.google.android.material.textview.MaterialTextView
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:id="@+id/tv_breed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_breed_image"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="right"
-            android:paddingBottom="8dp"/>
+            android:layout_height="194dp"
+            android:paddingBottom="8dp"
+            android:scaleType="centerCrop" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_breed_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_weight="8"
+                android:gravity="start|center_vertical"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                tools:text="Breed Name" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/breed_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:text="@string/learn_more"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
