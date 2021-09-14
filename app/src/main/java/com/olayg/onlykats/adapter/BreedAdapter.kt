@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.olayg.onlykats.databinding.ItemBreedBinding
 import com.olayg.onlykats.model.Breed
-import com.olayg.onlykats.model.Kat
+import com.olayg.onlykats.util.loadWithGlide
 
 /**
  * ListView - loads all objects into memory
@@ -47,6 +47,7 @@ class BreedAdapter(
 
         fun loadBreed(breed: Breed, position: Int) = with(binding) {
             tvBreed.text = "${position}. ${breed.name}"
+            breed.image?.url?.let { ivBreedImage.loadWithGlide(it) }
         }
 
         companion object {

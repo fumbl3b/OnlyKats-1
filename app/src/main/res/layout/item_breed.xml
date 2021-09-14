@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/breed_card_iew"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="#DCD9D9"
+    android:layout_margin="24dp"
+    app:cardCornerRadius="3dp"
+    app:cornerFamily="rounded">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <com.google.android.material.textview.MaterialTextView
+            android:textAppearance="?attr/textAppearanceHeadline6"
             android:id="@+id/tv_breed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-    </androidx.cardview.widget.CardView>
-</LinearLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_breed_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="right"
+            android:paddingBottom="8dp"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
