@@ -1,86 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".view.DetailsFragment">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/details"
-        android:textAppearance="?attr/textAppearanceHeadline4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.17"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.07999998" />
-
-    <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="50dp"
-        app:cardBackgroundColor="@color/white_50"
-        app:cardCornerRadius="10dp"
-        app:cornerFamily="rounded"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/detail_back_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_details"
-        tools:layout_editor_absoluteX="1dp">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/top_breed_app_bar"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:title="Breed Name" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Note: A RecyclerView can also be used -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_breed_detail"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/backgrounds/scenic" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            android:elevation="50dp"
+            app:cardBackgroundColor="@color/white_50"
+            app:cardCornerRadius="10dp"
+            app:cornerFamily="rounded"
+            app:layout_constraintBottom_toTopOf="@+id/detail_back_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_details"
+            tools:layout_editor_absoluteX="1dp">
 
             <LinearLayout
-                android:id="@+id/ll_breed_text"
+                android:id="@+id/ll_breed_layout"
                 android:layout_width="match_parent"
-                android:layout_margin="16dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_breed_alt_names"
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_breed_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    tools:text="Alternate Names"
-                    android:textAppearance="?attr/textAppearanceHeadline6"/>
+                    android:scaleType="centerInside" />
+                <!--                    tools:src="@tools:sample/backgrounds/scenic" -->
+
+                <LinearLayout
+                    android:id="@+id/ll_interior_breed_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_breed_alt_names"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        tools:text="Alternate Names" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_breed_temperment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        tools:text="Temperament" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_breed_origin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        tools:text="Breed Origin" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_breed_life_span"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        tools:text="Life Span" />
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginHorizontal="36dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="?android:attr/listDivider" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_breed_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        tools:text="Breed Description" />
+
+                </LinearLayout>
+
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_breed_description"
+                    android:id="@+id/label_stats"
+                    android:layout_width="match_parent"
+                    android:paddingStart="24dp"
+                    android:layout_height="wrap_content"
+                    android:text="Statistics" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_breed_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_stat" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/breed_wiki_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Breed Description"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"/>
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/view_wiki" />
+
             </LinearLayout>
-        </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/detail_back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/back"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

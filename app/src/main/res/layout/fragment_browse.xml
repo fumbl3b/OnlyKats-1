@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.BrowseFragment">
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
@@ -19,7 +18,7 @@
         android:id="@+id/rv_breed_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:paddingHorizontal="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
         tools:listitem="@layout/item_breed" />

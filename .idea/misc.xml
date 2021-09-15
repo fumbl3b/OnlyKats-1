@@ -5,12 +5,18 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.21302083333333333" />
         <entry key="app/src/main/res/layout/fragment_browse.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.33061594202898553" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.2459016393442623" />
+        <entry key="app/src/main/res/layout/fragment_detail_2.xml" value="0.15942028985507245" />
+        <entry key="app/src/main/res/layout/fragment_detail_new.xml" value="0.15942028985507245" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.23148148148148148" />
         <entry key="app/src/main/res/layout/item_breed.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_category.xml" value="0.23148148148148148" />
         <entry key="app/src/main/res/layout/item_endpoint.xml" value="0.14895833333333333" />
         <entry key="app/src/main/res/layout/item_kat.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/item_stat.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/list_item.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/menu/top_breed_app_bar.xml" value="0.28229166666666666" />
       </map>
     </option>
   </component>
