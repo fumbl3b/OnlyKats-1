@@ -2,11 +2,12 @@ package com.olayg.onlykats.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.olayg.onlykats.databinding.ItemBreedBinding
 import com.olayg.onlykats.model.Breed
 import com.olayg.onlykats.util.loadWithGlide
+import com.olayg.onlykats.view.BrowseFragmentDirections
 
 /**
  * ListView - loads all objects into memory
@@ -50,6 +51,7 @@ class BreedAdapter(
             tvBreedName.text = "${breed.name}"
             breed.image?.url?.let { ivBreedImage.loadWithGlide(it) }
             breedButton.setOnClickListener {
+                it.findNavController().navigate(BrowseFragmentDirections.actionDetailsFragment(breed))
             }
         }
 

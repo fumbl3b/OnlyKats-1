@@ -1,8 +1,12 @@
 package com.olayg.onlykats.model
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class Breed(
     val adaptability: Int?,
@@ -29,8 +33,8 @@ data class Breed(
     @Json(name = "health_issues")
     val healthIssues: Int?,
     val hypoallergenic: Int?,
-    val id: String?,
-    val image: Image?,
+    val id: String,
+    val image: @RawValue Image?,
     val indoor: Int?,
     val intelligence: Int?,
     val lap: Int?,
@@ -59,7 +63,7 @@ data class Breed(
     @Json(name = "vetstreet_url")
     val vetStreetUrl: String?,
     val vocalisation: Int?,
-    val weight: Weight?,
+    val weight: @RawValue Weight?,
     @Json(name = "wikipedia_url")
     val wikipediaUrl: String?
-)
+) : Parcelable
