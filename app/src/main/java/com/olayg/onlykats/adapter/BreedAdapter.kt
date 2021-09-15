@@ -2,6 +2,7 @@ package com.olayg.onlykats.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.olayg.onlykats.databinding.ItemBreedBinding
 import com.olayg.onlykats.model.Breed
@@ -48,6 +49,8 @@ class BreedAdapter(
         fun loadBreed(breed: Breed) = with(binding) {
             tvBreedName.text = "${breed.name}"
             breed.image?.url?.let { ivBreedImage.loadWithGlide(it) }
+            breedButton.setOnClickListener {
+            }
         }
 
         companion object {

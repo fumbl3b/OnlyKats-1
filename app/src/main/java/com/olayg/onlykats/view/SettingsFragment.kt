@@ -94,7 +94,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun toggleBreedsView(show: Boolean) = with(binding) {
-
+        //TODO: implement toggleBreedsView
     }
 
     private fun toggleApply() {
@@ -105,7 +105,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val newQuery = getKatQueries()
         return katViewModel.queries?.let {
             return@let it.endPoint != newQuery.endPoint || (it.limit != newQuery.limit && newQuery.limit >= 10)
-        } ?: (newQuery.endPoint != null && newQuery.limit >= 10)
+        } ?: (newQuery.endPoint == EndPoint.BREEDS
+                || newQuery.limit >= 10)
     }
 
     private fun getKatQueries() = Queries(
