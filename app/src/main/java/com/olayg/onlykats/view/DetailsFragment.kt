@@ -34,7 +34,6 @@ class DetailsFragment : Fragment(R.layout.fragment_detail) {
         super.onViewCreated(view, savedInstanceState)
         val breed = args.breedId  //TODO: rename this
         initViews(breed, view)
-
         binding.tvBreedDescription.text = breed.description
     }
 
@@ -64,6 +63,12 @@ class DetailsFragment : Fragment(R.layout.fragment_detail) {
             breed.dogFriendly?.let { "Dog Friendly" to it },
             breed.energyLevel?.let { "Energy Level" to it },
             breed.intelligence?.let { "Intelligence" to it },
+            breed.grooming?.let { "Grooming" to it },
+            breed.healthIssues?.let { "Health Issues" to it },
+            breed.sheddingLevel?.let { "Shedding Level" to it },
+            breed.socialNeeds?.let { "Social Needs" to it },
+            breed.strangerFriendly?.let { "Stranger Friendly" to it },
+            breed.vocalisation?.let { "Vocalisation" to it },
         )
 
         rvBreedStats.adapter = statAdapter
