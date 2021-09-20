@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    tools:context="com.olayg.onlykats.view.SettingsFragment">
+    tools:context="com.olayg.onlykats.view.UpdateSettingsFragment">
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/images_endpoint_group"

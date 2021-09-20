@@ -3,6 +3,7 @@ package com.olayg.onlykats.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.olayg.onlykats.model.Breed
+import com.olayg.onlykats.model.Category
 import com.olayg.onlykats.model.Kat
 import com.olayg.onlykats.model.Settings
 import com.olayg.onlykats.model.request.Queries
@@ -38,6 +39,9 @@ class KatViewModel : ViewModel() {
 
     private var isNextPage = false
     private var currentPage = -1
+
+    var breedList: List<Pair<String?, String?>>? = mutableListOf()
+    var categoryList: List<Pair<String?, Int?>>? = mutableListOf()
 
     fun fetchData(queries: Queries) {
         this.queries = queries
@@ -82,13 +86,18 @@ class KatViewModel : ViewModel() {
         PageAction.PREV -> if (page > 0) page.dec() else page
     }
 
-
     fun getDropdownOptions() {
         viewModelScope.launch(Dispatchers.IO) {
             KatRepo.getSettingsState().collect {
+                if (it is ApiState.Success) {
+                    val lists = it.data
+                    breedList =
+                        lists.breeds?.map { b -> Pair(b.name, b.id) }
+                    categoryList =
+                        lists.categories?.map { c -> Pair(c.name, c.id) }
+                }
                 _settingsState.postValue(it)
             }
         }
     }
-
 }

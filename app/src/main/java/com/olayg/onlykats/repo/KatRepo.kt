@@ -12,6 +12,14 @@ object KatRepo {
     private const val TAG = "KAT-REPO"
     private val katService by lazy { RetrofitInstance.katService }
 
+    private val Queries.asQueryMap: Map<String, Any>
+        get() = listOfNotNull(
+            "limit" to limit,
+            categoryIds?.let { "category_ids" to it },
+            breedId?.let { "breed_id" to it },
+            page?.let { "page" to it }
+        ).toMap()
+
     fun getKatState(queries: Queries) = flow {
         emit(ApiState.Loading)
 
@@ -75,11 +83,4 @@ object KatRepo {
         } else emit(ApiState.Failure("Error fetching data."))
     }
 
-    private val Queries.asQueryMap: Map<String, Any>
-        get() = listOfNotNull(
-            "limit" to limit,
-            categoryIds?.let { "category_ids" to it },
-            breedId?.let { "breed_id" to it },
-            page?.let { "page" to it }
-        ).toMap()
 }

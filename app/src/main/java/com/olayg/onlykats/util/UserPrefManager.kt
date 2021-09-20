@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+
+// TODO: implement this
 class UserPrefManager private constructor(private val dataStore: DataStore<Preferences>) {
 //
 //    val queries

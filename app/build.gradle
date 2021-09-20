@@ -78,7 +78,11 @@ dependencies {
     // Data Persistence *Large Chunks of Data*
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version" // coroutine support
     kapt "androidx.room:room-compiler:$room_version"
+
+    // Room m1 fix
+    kapt "org.xerial:sqlite-jdbc:3.34.0"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
