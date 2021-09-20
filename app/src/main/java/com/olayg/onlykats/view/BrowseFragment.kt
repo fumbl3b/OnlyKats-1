@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.olayg.onlykats.adapter.BreedAdapter
@@ -15,15 +16,18 @@ import com.olayg.onlykats.adapter.KatAdapter
 import com.olayg.onlykats.databinding.FragmentBrowseBinding
 import com.olayg.onlykats.model.Breed
 import com.olayg.onlykats.model.Kat
+import com.olayg.onlykats.model.request.Queries
 import com.olayg.onlykats.util.ApiState
+import com.olayg.onlykats.util.EndPoint
 import com.olayg.onlykats.util.PageAction
+import com.olayg.onlykats.util.PreferenceKeys
 import com.olayg.onlykats.viewmodel.KatViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 
 /**
  * A simple [Fragment] subclass.
  */
-// TODO: 9/11/21 Navigate automatically to SettingsFragment if no data present
-// TODO: 9/11/21 Observe breeds and react to states
 // TODO: 9/11/21 Show an AlertDialog with error message to prompt user of failures
 class BrowseFragment : Fragment() {
 
@@ -43,6 +47,23 @@ class BrowseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (katViewModel.queries == null) viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            view.context.dataStore.data.map { preferences ->
+                preferences[PreferenceKeys.ENDPOINT]?.let {
+                    Queries(
+                        endPoint = EndPoint.valueOf(it),
+                        limit = preferences[PreferenceKeys.LIMIT] ?: 10,
+                        page = 0,
+                        breedId = preferences[PreferenceKeys.BREED_ID],
+                        categoryIds = preferences[PreferenceKeys.CATEGORY_IDS]
+                        )
+                }
+            }.collect {
+                if(it == null) findNavController().navigate(BrowseFragmentDirections.actionSettingsFragment())
+                else katViewModel.fetchData(it)
+            }
+        }
         setupObservers()
         initViews()
     }

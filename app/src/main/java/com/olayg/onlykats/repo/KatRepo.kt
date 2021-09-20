@@ -1,6 +1,7 @@
 package com.olayg.onlykats.repo
 
 import android.util.Log
+import com.olayg.onlykats.model.Settings
 import com.olayg.onlykats.model.request.Queries
 import com.olayg.onlykats.repo.remote.RetrofitInstance
 import com.olayg.onlykats.util.ApiState
@@ -12,64 +13,73 @@ object KatRepo {
     private val katService by lazy { RetrofitInstance.katService }
 
     fun getKatState(queries: Queries) = flow {
-        Log.d(TAG, "getKatState: emit(ApiState.Loading)")
         emit(ApiState.Loading)
-        Log.d(TAG, "getKatState: katService.getData(limit, page, order)")
 
         val state = if (queries.endPoint != null) {
             val katResponse = katService.getKatImages(queries.asQueryMap)
-            Log.d(TAG, "getKatState: katResponse = ${katResponse.body()}")
 
             if (katResponse.isSuccessful) {
-                Log.d(TAG, "getKatState: katResponse.isSuccessful")
                 if (katResponse.body().isNullOrEmpty()) {
-                    Log.d(TAG, "getKatState: EndOfPage")
                     ApiState.EndOfPage
                 } else {
-                    Log.d(TAG, "getKatState: Success(katResponse.body()!!)")
                     ApiState.Success(katResponse.body()!!)
                 }
             } else {
-                Log.d(TAG, "getKatState: Failure(\"Error fetching data.\")")
                 ApiState.Failure("Error fetching data.")
             }
         } else ApiState.Failure("Endpoint is null")
 
-        Log.d(TAG, "getKatState: emit(state)")
         emit(state)
     }
 
-    fun getBreedState(queries: Queries) = flow {
+    fun getBreedState() = flow {
         emit(ApiState.Loading)
 
-        val state = if(queries.endPoint != null) {
-            val breedResponse = katService.getBreeds()
-            Log.d(TAG, "getBreedState: breedResponse ${breedResponse.body()}")
+        val breedResponse = katService.getBreeds()
 
-            if(breedResponse.isSuccessful) {
-                Log.d(TAG, "getBreedState: breedResponse.isSuccessful")
-                if(breedResponse.body().isNullOrEmpty()) {
-                    Log.d(TAG, "getBreedState: no more breeds")
-                    ApiState.EndOfPage
-                } else {
-                    Log.d(TAG, "getBreedState: Success(breedResponse.body()")
-                    ApiState.Success(breedResponse.body()!!)
-                }
+        val state = if (breedResponse.isSuccessful) {
+            if (breedResponse.body().isNullOrEmpty()) {
+                ApiState.EndOfPage
             } else {
-                Log.d(TAG, "getBreedState: Failure(\"Error fetching data.\"")
-                ApiState.Failure("Error fetching data.")
+                ApiState.Success(breedResponse.body()!!)
             }
-        } else ApiState.Failure("Endpoint is null")
+        } else {
+            ApiState.Failure("Error fetching data.")
+        }
 
-        Log.d(TAG, "getBreedState: emit(state)")
         emit(state)
+    }
+
+
+    fun getSettingsState() = flow {
+        emit(ApiState.Loading)
+
+        val katBreedsResponse = katService.getBreeds()
+        val katCategoriesResponse = katService.getKatCategories()
+
+        if (katBreedsResponse.isSuccessful && katCategoriesResponse.isSuccessful) {
+            if (katBreedsResponse.body().isNullOrEmpty() || katCategoriesResponse.body()
+                    .isNullOrEmpty()
+            ) {
+                emit(ApiState.Failure("NO_DATA_FOUND"))
+            } else {
+                emit(
+                    ApiState.Success(
+                        Settings(
+                            katCategoriesResponse.body()!!,
+                            katBreedsResponse.body()!!
+                        )
+                    )
+                )
+            }
+        } else emit(ApiState.Failure("Error fetching data."))
     }
 
     private val Queries.asQueryMap: Map<String, Any>
         get() = listOfNotNull(
             "limit" to limit,
-//            category?.let { "category_ids" to it.id.toString() },
-//            breed?.let { "breed_id" to it.id.toString() },
+            categoryIds?.let { "category_ids" to it },
+            breedId?.let { "breed_id" to it },
             page?.let { "page" to it }
         ).toMap()
 }

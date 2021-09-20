@@ -1,32 +1,39 @@
 package com.olayg.onlykats.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.core.view.isVisible
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textview.MaterialTextView
 import com.olayg.onlykats.R
-import com.olayg.onlykats.databinding.ActivityHomeBinding.bind
 import com.olayg.onlykats.databinding.FragmentSettingsBinding
+import com.olayg.onlykats.model.Settings
 import com.olayg.onlykats.model.request.Queries
+import com.olayg.onlykats.util.ApiState
 import com.olayg.onlykats.util.EndPoint
+import com.olayg.onlykats.util.PreferenceKeys
 import com.olayg.onlykats.viewmodel.KatViewModel
+import kotlinx.coroutines.flow.map
 
-/**
- * A simple [Fragment] subclass.
- */
-// TODO: 9/10/21 Use toggle method to show or hide unique views for Images (Try using Group in ConstraintLayout)
-// TODO: 9/10/21 Use toggle method to show or hide unique views for Breeds
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val katViewModel by activityViewModels<KatViewModel>()
+
+
+    private var breedList: List<Pair<String?, String>> = mutableListOf()
+    private var categoryList: List<Pair<String?, Int?>> = mutableListOf()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +45,22 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // check to set the correct filters based on endpoint
+        if (katViewModel.queries?.endPoint != null) viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            view.context.dataStore.data.map { preferences ->
+                preferences[PreferenceKeys.ENDPOINT]?.let {
+                    Queries(
+                        endPoint = EndPoint.valueOf(it),
+                        limit = preferences[PreferenceKeys.LIMIT] ?: 10,
+                        page = 0,
+                        breedId = "abys",
+                        categoryIds = 1
+                    )
+                }
+            }
+        }
+
         initView()
         initObservers()
         initEndpointDropdown()
@@ -54,16 +77,49 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun initView() = with(binding) {
-        katViewModel.queries?.let { sliderLimit.value = it.limit.toFloat() }
+
+        // Maybe will be redundant with PreferenceStore implemented
+        katViewModel.queries?.let { queries ->
+            sliderLimit.value = queries.limit.toFloat()
+            queries.endPoint?.let {
+                etEndpoint.setText(it.name)
+                etEndpoint.setSelection(it.ordinal)
+            }
+            //TODO: add the categories and breeds
+        }
         sliderLimit.addOnChangeListener { _, _, _ -> toggleApply() }
+
+        // call view model to get data for settings
+
+        katViewModel.getDropdownOptions()
+
         btnApply.setOnClickListener {
-            katViewModel.fetchData(getKatQueries())
-            findNavController().navigate(R.id.action_settingsFragment_to_browseFragment)
+            val queries = getKatQueries()
+
+            // save current query to the PreferenceStore
+            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                it.context.dataStore.edit { settings ->
+                    queries.endPoint?.name?.let {
+                        settings[PreferenceKeys.ENDPOINT] = it
+                    }
+                    queries.limit?.let {
+                        settings[PreferenceKeys.LIMIT] = it
+                    }
+                }
+            }
+
+            katViewModel.fetchData(queries)
+            findNavController().navigateUp()
         }
     }
 
     private fun initObservers() = with(katViewModel) {
-        stateUpdated.observe(viewLifecycleOwner) { toggleApply() }
+        stateUpdated.observe(viewLifecycleOwner) {
+            toggleApply()
+        }
+        settingsState.observe(viewLifecycleOwner) {
+            if (it is ApiState.Success) initSettingsDropdowns(it.data)
+        }
     }
 
     private fun initEndpointDropdown() = with(binding.etEndpoint) {
@@ -88,6 +144,34 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
+    private fun initSettingsDropdowns(settings: Settings) = with(binding) {
+
+        breedList = settings.breeds?.map { Pair(it.name, it.id) }!!
+        categoryList = settings.categories?.map { Pair(it.name, it.id) }!!
+
+        val breedAdapter = ArrayAdapter(
+            breedTextView.context,
+            R.layout.item_category,
+            breedList?.map { it.first }!!
+        )
+        (breedTextView as? AutoCompleteTextView)?.setAdapter(breedAdapter)
+
+        val categoryAdapter = ArrayAdapter(
+            categoryTextView.context,
+            R.layout.item_category,
+            categoryList?.map { it.first }!!
+        )
+        (categoryTextView as? AutoCompleteTextView)?.setAdapter((categoryAdapter))
+
+        breedTextView.setOnItemClickListener { _, view, _, _ ->
+            toggleApply()
+        }
+
+        categoryTextView.setOnItemClickListener { _, view, _, _ ->
+            toggleApply()
+        }
+    }
+
     private fun toggleImagesView(show: Boolean) = with(binding) {
         imagesEndpointGroup.visibility = if (show) View.VISIBLE
         else View.GONE
@@ -102,18 +186,41 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun validateQuery(): Boolean {
+
         val newQuery = getKatQueries()
+        Log.d("newQuery", "validateQuery: $newQuery")
+
+        // if VM already has queries else return true if breeds is selected or limit has been set above 10
         return katViewModel.queries?.let {
-            return@let it.endPoint != newQuery.endPoint || (it.limit != newQuery.limit && newQuery.limit >= 10)
+            // return true if there's a new endpoint or the limit changed to a valid new limit
+            return@let it.endPoint != newQuery.endPoint
+                    || (it.limit != newQuery.limit && newQuery.limit >= 10)
+                    || it.breedId != newQuery.breedId
+                    || it.categoryIds != newQuery.categoryIds
+            // TODO: add validation for the new categories and breeds
         } ?: (newQuery.endPoint == EndPoint.BREEDS
                 || newQuery.limit >= 10)
     }
 
-    private fun getKatQueries() = Queries(
-        endPoint = binding.etEndpoint.text.toString().run {
+    private fun getKatQueries(): Queries {
+        val endpoint = binding.etEndpoint.text.toString().run {
             if (isNotBlank()) EndPoint.valueOf(this) else null
-        },
-        limit = binding.sliderLimit.value.toInt(),
-        page = katViewModel.queries?.page
-    )
+        }
+        val limit = binding.sliderLimit.value.toInt()
+        val page = katViewModel.queries?.page
+
+        val categoryStr = binding.categoryTextView.text.toString()
+        val categoryIds = categoryList.firstOrNull { it.first == categoryStr }?.second
+
+        val breedString = binding.breedTextView.text.toString()
+        val breedId = breedList.firstOrNull { it.first == breedString }?.second
+
+        return Queries(
+            endpoint,
+            limit,
+            page,
+            breedId,
+            categoryIds
+        )
+    }
 }

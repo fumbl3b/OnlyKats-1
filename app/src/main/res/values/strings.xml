@@ -7,8 +7,8 @@
     <string name="apply">Apply</string>
     <string name="endpoint">Select endpoint</string>
     <string name="search_parameters">Search Parameters:</string>
-    <string name="image_category">Image Category</string>
-    <string name="choose_breed">Choose Breed</string>
+    <string name="image_category">Filter by Image Category</string>
+    <string name="choose_breed">Filter by Breed</string>
     <string name="learn_more"><![CDATA[Learn More >]]></string>
     <string name="back">BACK</string>
     <string name="view_wiki">View Wiki</string>

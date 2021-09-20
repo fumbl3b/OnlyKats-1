@@ -1,32 +1,37 @@
 package com.olayg.onlykats.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.olayg.onlykats.model.Breed
 import com.olayg.onlykats.model.Kat
+import com.olayg.onlykats.model.Settings
 import com.olayg.onlykats.model.request.Queries
 import com.olayg.onlykats.repo.KatRepo
 import com.olayg.onlykats.util.ApiState
 import com.olayg.onlykats.util.EndPoint
 import com.olayg.onlykats.util.PageAction
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-// TODO: 9/10/21 Get the breedState from repo and load into the breedState livedata
-// TODO: 9/10/21 Once you the breedState from repo make sure you update isNextPage
+//TODO: find a way to check to see if dataStore has cached breeds/categories before making request
 class KatViewModel : ViewModel() {
 
+    val TAG = "KatViewModel"
+
     private val _katState = MutableLiveData<ApiState<List<Kat>>>()
-    val katState: LiveData<ApiState<List<Kat>>>
-        get() = _katState
+    val katState: LiveData<ApiState<List<Kat>>> get() = _katState
 
     private val _breedState = MutableLiveData<ApiState<List<Breed>>>()
     val breedState: LiveData<ApiState<List<Breed>>> get() = _breedState
 
-    // This lets us combine multiple livedata's into 1, I am using this to update settings anytime
-    // the states change
+    private val _settingsState = MutableLiveData<ApiState<Settings>>()
+    val settingsState: LiveData<ApiState<Settings>> get() = _settingsState
+
     val stateUpdated = MediatorLiveData<Unit>().apply {
         addSource(_katState) { value = Unit }
         addSource(_breedState) { value = Unit }
+        addSource(_settingsState) { value = Unit }
     }
 
     var queries: Queries? = null
@@ -47,7 +52,7 @@ class KatViewModel : ViewModel() {
                 currentPage = query.page!!
                 when (query.endPoint) {
                     EndPoint.IMAGES -> getImages(query)
-                    EndPoint.BREEDS -> getBreeds(query)
+                    EndPoint.BREEDS -> getBreeds()
                 }
             }
         }
@@ -62,9 +67,9 @@ class KatViewModel : ViewModel() {
         }
     }
 
-    private fun getBreeds(queries: Queries) {
+    private fun getBreeds() {
         viewModelScope.launch {
-            KatRepo.getBreedState(queries).collect { breedState ->
+            KatRepo.getBreedState().collect { breedState ->
                 isNextPage = breedState !is ApiState.EndOfPage
                 _breedState.postValue(breedState)
             }
@@ -75,6 +80,15 @@ class KatViewModel : ViewModel() {
         PageAction.FIRST -> 0
         PageAction.NEXT -> page.inc()
         PageAction.PREV -> if (page > 0) page.dec() else page
+    }
+
+
+    fun getDropdownOptions() {
+        viewModelScope.launch(Dispatchers.IO) {
+            KatRepo.getSettingsState().collect {
+                _settingsState.postValue(it)
+            }
+        }
     }
 
 }
