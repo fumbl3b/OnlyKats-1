@@ -194,10 +194,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         return katViewModel.queries?.let {
             // return true if there's a new endpoint or the limit changed to a valid new limit
             return@let it.endPoint != newQuery.endPoint
-                    || (it.limit != newQuery.limit && newQuery.limit >= 10)
+                    || (it.limit != newQuery.limit || newQuery.limit >= 10)
                     || it.breedId != newQuery.breedId
                     || it.categoryIds != newQuery.categoryIds
-            // TODO: add validation for the new categories and breeds
         } ?: (newQuery.endPoint == EndPoint.BREEDS
                 || newQuery.limit >= 10)
     }
